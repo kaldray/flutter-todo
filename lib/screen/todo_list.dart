@@ -1,6 +1,7 @@
 import 'package:flutter_application_1/state/todo.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
+import "./update_todo.dart";
 
 class TodoList extends StatelessWidget {
   const TodoList({super.key});
@@ -31,15 +32,35 @@ class TodoList extends StatelessWidget {
                               itemCount: todo.lenght(),
                               itemBuilder: (context, index) {
                                 return CupertinoListTile(
-                                  title: Text(todo.getTodoAtIndex(index)),
-                                  trailing: CupertinoButton(
-                                    padding: EdgeInsets.zero,
-                                    child: Icon(CupertinoIcons.delete),
-                                    onPressed: () {
-                                      todo.deleteAtIndex(index);
-                                    },
-                                  ),
-                                );
+                                    title: Text(todo.getTodoAtIndex(index)),
+                                    trailing: Row(
+                                      children: [
+                                        CupertinoButton(
+                                          padding: EdgeInsets.zero,
+                                          child: Icon(CupertinoIcons.delete),
+                                          onPressed: () {
+                                            todo.deleteAtIndex(index);
+                                          },
+                                        ),
+                                        CupertinoButton(
+                                          padding: EdgeInsets.zero,
+                                          child: Icon(CupertinoIcons.pencil),
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                CupertinoPageRoute(
+                                                    builder: (context) =>
+                                                        TodoUpdateScreen(
+                                                          todo: (
+                                                            index,
+                                                            todo.getTodoAtIndex(
+                                                                index)
+                                                          ),
+                                                        )));
+                                          },
+                                        ),
+                                      ],
+                                    ));
                               },
                             ),
                           )

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import "./screen/main.dart";
+import "screen/add_todo.dart";
 import "./screen/todo_list.dart";
 import 'package:provider/provider.dart';
 import "./state/todo.dart";
@@ -33,11 +33,6 @@ class TabController extends StatefulWidget {
 class Tab extends State<TabController> {
   final CupertinoTabController controller = CupertinoTabController();
   List<Widget> data = [const TodoList(), const TodoScreen()];
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

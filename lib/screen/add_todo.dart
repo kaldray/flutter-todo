@@ -104,7 +104,7 @@ class TodoScreen extends StatelessWidget {
       title: "Todo app",
       home: CupertinoPageScaffold(
           navigationBar: CupertinoNavigationBar(
-            middle: Text('Accueil'),
+            middle: Text('Ajouter'),
           ),
           child: SafeArea(
             minimum: EdgeInsets.all(10),

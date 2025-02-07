@@ -9,11 +9,6 @@ class TodoListState extends ChangeNotifier {
   /// An unmodifiable view of the items in the cart.
   UnmodifiableListView<String> get items => UnmodifiableListView(todo);
 
-  /// The current total price of all items (assuming all items cost $42).
-  int get totalPrice => todo.length * 42;
-
-  /// Adds [item] to todolist. This and [removeAll] are the only ways to modify the
-  /// cart from the outside.
   void add(String text) {
     if (text.trim().isNotEmpty) {
       todo.add(text);
@@ -25,12 +20,17 @@ class TodoListState extends ChangeNotifier {
     return todo.length;
   }
 
-  getTodoAtIndex(index) {
+  String getTodoAtIndex(index) {
     return todo[index];
   }
 
   void deleteAtIndex(index) {
     todo.removeAt(index);
+    notifyListeners();
+  }
+
+  void updateAtIndex(int index, String text) {
+    todo[index] = text;
     notifyListeners();
   }
 
