@@ -1,19 +1,33 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TodoListState extends ChangeNotifier {
   /// Internal, private state of the cart.
-  final List<String> todo = [];
+
+  TodoListState() {
+    _getInitialTodo();
+  }
+
+  List<String> todo = [];
+
+  _getInitialTodo() async {
+    final prefs = await SharedPreferences.getInstance();
+    todo = prefs.getStringList('todos') ?? [];
+    notifyListeners();
+  }
 
   /// An unmodifiable view of the items in the cart.
   UnmodifiableListView<String> get items => UnmodifiableListView(todo);
 
-  void add(String text) {
+  void add(String text) async {
+    final prefs = await SharedPreferences.getInstance();
     if (text.trim().isNotEmpty) {
       todo.add(text);
+      prefs.setStringList('todos', todo);
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   int lenght() {
@@ -24,9 +38,11 @@ class TodoListState extends ChangeNotifier {
     return todo[index];
   }
 
-  void deleteAtIndex(index) {
+  void deleteAtIndex(index) async {
+    final prefs = await SharedPreferences.getInstance();
     todo.removeAt(index);
     notifyListeners();
+    prefs.setStringList('todos', todo);
   }
 
   void updateAtIndex(int index, String text) {
