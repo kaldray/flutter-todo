@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import "todohttp.dart";
 
 class TodoListState extends ChangeNotifier {
   /// Internal, private state of the cart.
@@ -10,11 +11,17 @@ class TodoListState extends ChangeNotifier {
     _getInitialTodo();
   }
 
-  List<String> todo = [];
+  Set<String> todo = {};
 
   _getInitialTodo() async {
-    final prefs = await SharedPreferences.getInstance();
-    todo = prefs.getStringList('todos') ?? [];
+    var prefs = await SharedPreferences.getInstance();
+    final todos = await getTodos();
+    if (todos.isNotEmpty) {
+      todo = {...todos ?? []};
+    } else {
+      var arrStr = prefs.getStringList('todos');
+      todo = {...arrStr ?? []};
+    }
     notifyListeners();
   }
 
@@ -25,7 +32,8 @@ class TodoListState extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     if (text.trim().isNotEmpty) {
       todo.add(text);
-      prefs.setStringList('todos', todo);
+      prefs.setStringList('todos', todo.toList());
+      postTodo(text);
       notifyListeners();
     }
   }
@@ -34,25 +42,18 @@ class TodoListState extends ChangeNotifier {
     return todo.length;
   }
 
-  String getTodoAtIndex(index) {
-    return todo[index];
-  }
-
-  void deleteAtIndex(index) async {
+  void deleteAtIndex(text) async {
     final prefs = await SharedPreferences.getInstance();
-    todo.removeAt(index);
+    todo.remove(text);
+    deleteTodo(text);
+    prefs.setStringList('todos', todo.toList());
     notifyListeners();
-    prefs.setStringList('todos', todo);
   }
 
   void updateAtIndex(int index, String text) {
-    todo[index] = text;
-    notifyListeners();
-  }
-
-  /// Removes all items from the cart.
-  void removeAll() {
-    todo.clear();
+    var list = todo.toList();
+    list[index] = text;
+    todo = list.toSet();
     notifyListeners();
   }
 }

@@ -29,17 +29,19 @@ class TodoList extends StatelessWidget {
                           Expanded(
                             child: ListView.builder(
                               shrinkWrap: true,
-                              itemCount: todo.lenght(),
+                              itemCount: todo.todo.length,
                               itemBuilder: (context, index) {
                                 return CupertinoListTile(
-                                    title: Text(todo.getTodoAtIndex(index)),
+                                    title: Text(todo.todo.elementAt(index)),
                                     trailing: Row(
                                       children: [
                                         CupertinoButton(
                                           padding: EdgeInsets.zero,
                                           child: Icon(CupertinoIcons.delete),
                                           onPressed: () {
-                                            todo.deleteAtIndex(index);
+                                            var text =
+                                                todo.todo.elementAt(index);
+                                            todo.deleteAtIndex(text);
                                           },
                                         ),
                                         CupertinoButton(
@@ -53,7 +55,7 @@ class TodoList extends StatelessWidget {
                                                         TodoUpdateScreen(
                                                           todo: (
                                                             index,
-                                                            todo.getTodoAtIndex(
+                                                            todo.todo.elementAt(
                                                                 index)
                                                           ),
                                                         )));
